@@ -1,4 +1,4 @@
-package io.azortis.combatlog;
+package com.azortis.combatlog;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

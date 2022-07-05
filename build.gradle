@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'io.azortis'
+group = 'com.azortis'
 version = '1.0.0'
 
 repositories {
