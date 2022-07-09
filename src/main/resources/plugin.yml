@@ -1,6 +1,7 @@
 name: CombatLog
 version: '${version}'
-main: io.azortis.combatlog.CombatLog
+main: com.azortis.combatlog.CombatLog
 api-version: 1.19
 authors: [ EOPhantom, X1XX ]
 description: The combat logging solution!
+softdepend: [WorldGuard]
