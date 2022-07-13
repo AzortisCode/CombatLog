@@ -2,11 +2,13 @@ package com.azortis.combatlog;
 
 import com.azortis.combatlog.hook.WorldGuardHook;
 import com.azortis.combatlog.managers.CombatManager;
+import com.azortis.combatlog.managers.WorldGuardManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class CombatLog extends JavaPlugin {
 
     private CombatManager combatManager;
+    private WorldGuardManager worldGuardManager;
 
     @Override
     public void onEnable() {
@@ -21,7 +23,7 @@ public final class CombatLog extends JavaPlugin {
         combatManager = new CombatManager(this);
 
         if(WorldGuardHook.init()) {
-            // todo: do our worldguard features here
+            worldGuardManager = new WorldGuardManager(this);
         }
 
 

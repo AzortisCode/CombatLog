@@ -77,6 +77,9 @@ public class CombatListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLeave(PlayerQuitEvent event) {
         manager.creeperSpawner.remove(event.getPlayer().getUniqueId());
+        if(manager.combatTimer.containsKey(event.getPlayer().getUniqueId())) {
+            event.getPlayer().setHealth(0);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
