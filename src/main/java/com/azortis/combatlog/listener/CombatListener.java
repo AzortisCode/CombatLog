@@ -19,7 +19,6 @@ import java.util.*;
 
 public class CombatListener implements Listener {
     private final CombatManager manager;
-    private Map<UUID, Set<Creeper>> creeperSpawner = new HashMap<>();
     public CombatListener(CombatManager manager) {
         this.manager = manager;
     }
@@ -45,14 +44,13 @@ public class CombatListener implements Listener {
             case ENTITY_EXPLOSION:
                 if (event.getDamager().getType() != EntityType.CREEPER) return;
                 for(Player spawner : Bukkit.getOnlinePlayers()) {
-                    if(creeperSpawner.get(spawner.getUniqueId()).contains(event.getDamager())) damager = spawner;
+                    if(manager.creeperSpawner.get(spawner.getUniqueId()).contains(event.getDamager())) damager = spawner;
                 }
                 break;
             default:
                 break;
         }
-
-        if (damager != null) {
+        if (damager != null && damager != player) {
             manager.processAttack(player, damager);
         }
     }
@@ -78,7 +76,7 @@ public class CombatListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLeave(PlayerQuitEvent event) {
-        creeperSpawner.remove(event.getPlayer().getUniqueId());
+        manager.creeperSpawner.remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -90,16 +88,6 @@ public class CombatListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if(event.getItem().getType() == Material.CREEPER_SPAWN_EGG) return;
         if(event.getClickedBlock().getType() == Material.AIR) return;
-        Creeper creeper = (Creeper) event.getPlayer().getWorld().spawnEntity(event.getClickedBlock().getLocation().add(0, 1, 0), EntityType.CREEPER, CreatureSpawnEvent.SpawnReason.EGG);
-        Player player = event.getPlayer();
-        if (!creeperSpawner.containsKey(player.getUniqueId())) creeperSpawner.put(player.getUniqueId(), new HashSet<>());
-        creeperSpawner.get(player.getUniqueId()).add(creeper);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntitySpawn(CreatureSpawnEvent event) {
-        if(event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.EGG) return;
-        if(event.getEntity().getType() != EntityType.CREEPER) return;
-        if(!(creeperSpawner.containsKey(event.getLocation()))) return;
+        manager.trackingCreeper(event.getPlayer());
     }
 }
