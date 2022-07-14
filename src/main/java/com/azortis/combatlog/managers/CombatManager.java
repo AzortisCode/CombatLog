@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -21,8 +22,6 @@ public class CombatManager {
 
         Bukkit.getServer().getPluginManager().registerEvents(new CombatListener(this), plugin);
     }
-
-
 
     public void processAttack(Player damaged, Player damager) {
         combatTimer.put(damaged.getUniqueId(), 30);
@@ -49,5 +48,9 @@ public class CombatManager {
         Creeper creeper = (Creeper) player.getWorld().spawnEntity(player.getLocation().add(0,1,0), EntityType.CREEPER);
         if (!creeperSpawner.containsKey(player.getUniqueId())) creeperSpawner.put(player.getUniqueId(), new HashSet<>());
         creeperSpawner.get(player.getUniqueId()).add(creeper);
+    }
+
+    public void spawnVillager(Player player){
+
     }
 }
