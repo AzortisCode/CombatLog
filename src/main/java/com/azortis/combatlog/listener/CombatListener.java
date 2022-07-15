@@ -90,6 +90,7 @@ public class CombatListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if(event.getItem() == null);
         if(event.getItem().getType() != Material.CREEPER_SPAWN_EGG) return;
         if(event.getClickedBlock().getType() == Material.AIR) return;
         manager.trackingCreeper(event.getPlayer());
