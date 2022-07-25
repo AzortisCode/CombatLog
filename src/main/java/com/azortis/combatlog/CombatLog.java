@@ -23,11 +23,8 @@ public final class CombatLog extends JavaPlugin {
         combatManager = new CombatManager(this);
 
         if(WorldGuardHook.init()) {
-            worldGuardManager = new WorldGuardManager(this);
+            worldGuardManager = new WorldGuardManager(this, combatManager);
         }
-
-
-
 
     }
 

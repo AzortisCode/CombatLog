@@ -51,7 +51,8 @@ public class CombatListener implements Listener {
                 break;
         }
         if (damager != null && damager != player) {
-            manager.processAttack(player, damager);
+            manager.combatTimer.put(player.getUniqueId(), 30);
+            manager.combatTimer.put(damager.getUniqueId(), 30);
         }
     }
 

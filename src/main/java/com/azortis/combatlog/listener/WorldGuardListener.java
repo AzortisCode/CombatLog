@@ -1,10 +1,10 @@
 package com.azortis.combatlog.listener;
 
+import com.azortis.combatlog.managers.CombatManager;
 import com.azortis.combatlog.managers.WorldGuardManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -16,35 +16,45 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WorldGuardListener implements Listener {
 
     private WorldGuardManager worldGuardManager;
+    private CombatManager combatManager;
     private List<Location> locations = new ArrayList<>();
     private Map<String, ProtectedRegion> regions = new HashMap<>();
     private List<ProtectedRegion> noPvpRegions = new ArrayList<>();
     private RegionContainer container;
-    private RegionManager regionManager;
 
-    public WorldGuardListener(WorldGuardManager worldGuardManager) {
+    public WorldGuardListener(WorldGuardManager worldGuardManager, CombatManager combatManager) {
         this.worldGuardManager = worldGuardManager;
+        this.combatManager = combatManager;
         container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                worldGuardTimer();
+            }
+        };
+       new Timer().schedule(task, 0, 2);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPlayerMovement(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        regionManager = container.get(BukkitAdapter.adapt(player.getWorld()));
-        if(regionManager == null) return;
+    public void worldGuardTimer(){
+        combatManager.combatTimer.forEach((key,value) -> {
+            //todo find a way to implement combatManager
+            //key == UUID
+            //value == combat time
+            Player player = Bukkit.getPlayer(key);
+            RegionManager regionManager = container.get(BukkitAdapter.adapt(player.getWorld()));
+            if(regionManager != null) return;
+            worldGuardProcessing(player, regionManager);
+        });
+    }
+
+    public void worldGuardProcessing(Player player, RegionManager regionManager) {
         regions = regionManager.getRegions();
         regions.forEach((key,value) -> {
             if(value.getFlag(Flags.PVP) == StateFlag.State.ALLOW) {

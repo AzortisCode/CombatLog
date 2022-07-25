@@ -2,6 +2,7 @@ package com.azortis.combatlog.managers;
 
 import com.azortis.combatlog.CombatLog;
 import com.azortis.combatlog.listener.CombatListener;
+import com.azortis.combatlog.listener.WorldGuardListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
@@ -18,30 +19,23 @@ public class CombatManager {
 
     public CombatManager(CombatLog plugin) {
         this.plugin = plugin;
-
-
-        Bukkit.getServer().getPluginManager().registerEvents(new CombatListener(this), plugin);
-    }
-
-    public void processAttack(Player damaged, Player damager) {
-        combatTimer.put(damaged.getUniqueId(), 30);
-        combatTimer.put(damager.getUniqueId(), 30);
         new BukkitRunnable() {
             @Override
             public void run() {
-                if(combatTimer.get(damaged.getUniqueId()) == 0){
-                    combatTimer.remove(damaged.getUniqueId());
-                } else if (combatTimer.get(damaged.getUniqueId()) > 0) {
-                    combatTimer.put(damaged.getUniqueId(), combatTimer.get(damaged.getUniqueId()) - 1);
-                }
-                if(combatTimer.get(damager.getUniqueId()) == 0){
-                    combatTimer.remove(damager.getUniqueId());
-                } else if (combatTimer.get(damager.getUniqueId()) > 0) {
-                    combatTimer.put(damager.getUniqueId(), combatTimer.get(damager.getUniqueId()) - 1);
-                }
-                if(combatTimer.containsKey(damaged.getUniqueId()) && combatTimer.containsKey(damager.getUniqueId())) cancel();
+                processAttack();
             }
         }.runTaskTimer(plugin, 20, 20);
+        Bukkit.getServer().getPluginManager().registerEvents(new CombatListener(this), plugin);
+    }
+
+    public void processAttack() {
+        combatTimer.forEach((key, value) -> {
+            if(value == 0){
+                combatTimer.remove(key);
+            } else if (value > 0) {
+                combatTimer.put(key, value-1);
+            }
+        });
     }
 
     public void trackingCreeper(Player player) {
@@ -50,7 +44,4 @@ public class CombatManager {
         creeperSpawner.get(player.getUniqueId()).add(creeper);
     }
 
-    public void spawnVillager(Player player){
-
-    }
 }
