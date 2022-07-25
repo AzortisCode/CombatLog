@@ -12,7 +12,6 @@ public class WorldGuardManager {
     public WorldGuardManager(CombatLog combatLog, CombatManager combatManager) {
         this.plugin = combatLog;
         this.combatManager = combatManager;
-        this.
         Bukkit.getServer().getPluginManager().registerEvents(new WorldGuardListener(this, combatManager), plugin);
     }
 
