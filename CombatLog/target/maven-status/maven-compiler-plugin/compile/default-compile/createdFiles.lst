@@ -1,0 +1,12 @@
+com\eophantom\combatlog\commands\BlockedCommands.class
+com\eophantom\combatlog\hooks\WorldGuardHook.class
+com\eophantom\combatlog\listners\TriggerListener.class
+com\eophantom\combatlog\listners\CombatListener$1.class
+com\eophantom\combatlog\mangers\EventManager.class
+com\eophantom\combatlog\listners\AffectListener.class
+com\eophantom\combatlog\mangers\WorldGuardManager.class
+com\eophantom\combatlog\commands\CombatTimeCommand.class
+com\eophantom\combatlog\listners\InventoryListener.class
+com\eophantom\combatlog\mangers\EventManager$1.class
+com\eophantom\combatlog\CombatLog.class
+com\eophantom\combatlog\listners\CombatListener.class

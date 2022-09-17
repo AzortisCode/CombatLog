@@ -1,0 +1,13 @@
+name: CombatLog
+version: '${project.version}'
+main: com.azortis.combatlog.CombatLog
+api-version: 1.19
+softdepend: [WorldGuard]
+commands:
+  combatTime:
+    description: check remaining combatTime
+    usage: /<command>
+    aliases: ct
+  blockedCommand:
+    description: add blocked command while in combat
+    usage: /<command> add/remove/list
